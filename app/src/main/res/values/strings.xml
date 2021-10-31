@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">kWh-Monitoring</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="text_main">Consumo: </string>
+    <string name="text_value">Valor: </string>
+    <string name="text_control">Controle</string>
+    <string name="title_home">Home</string>
+    <string name="title_table">Tabela</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

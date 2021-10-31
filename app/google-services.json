@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1073240538589",
+    "firebase_url": "https://project-tcc-iot-default-rtdb.firebaseio.com",
+    "project_id": "project-tcc-iot",
+    "storage_bucket": "project-tcc-iot.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073240538589:android:af98f335628322eeef4a34",
+        "android_client_info": {
+          "package_name": "br.com.kwh_monitoring"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1073240538589-d8jo75dv7jrl16auqmi6rheko8eto5bk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtiU13n1b89nE24qRJCkDmSLQk1V8dzuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1073240538589-d8jo75dv7jrl16auqmi6rheko8eto5bk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073240538589:android:137adcd9dbf0d48cef4a34",
+        "android_client_info": {
+          "package_name": "br.com.tcc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1073240538589-d8jo75dv7jrl16auqmi6rheko8eto5bk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtiU13n1b89nE24qRJCkDmSLQk1V8dzuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1073240538589-d8jo75dv7jrl16auqmi6rheko8eto5bk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
