@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#154F30</color>
+
+    <!---->
     <color name="red">#8B0000</color>
     <color name="purpleDark">#391269</color>
     <color name="purpleMedium">#9F6DDD</color>
@@ -15,4 +17,12 @@
     <color name="blueDark">#3B02F5</color>
     <color name="grey">#F0EAE1</color>
     <color name="whiteTransparent">#99ffffff</color>
+
+    <color name="redMedium">#F24949</color>
+    <color name="greenWater">#3DE0F2</color>
+    <color name="blueLight">#07B0F2</color>
+    <color name="blueDeep">#2A2D41</color>
+    <color name="blackBlue">#1F0847</color>
+    <color name="greyDark">#8D8E98</color>
+    <color name="yellow">#F5BF1B</color>
 </resources>

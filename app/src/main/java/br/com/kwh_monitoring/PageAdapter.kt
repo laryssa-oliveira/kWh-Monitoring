@@ -20,4 +20,6 @@ class PageAdapter(fm: FragmentManager?, private val tabCount: Int) :
     override fun getItemPosition(`object`: Any): Int {
         return POSITION_NONE
     }
+
+
 }

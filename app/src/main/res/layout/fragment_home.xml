@@ -11,7 +11,7 @@
         android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blueDark"
+        android:background="@color/black"
         app:labelVisibilityMode="labeled"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,8 +42,10 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purpleMedium"
-        app:layout_constraintTop_toBottomOf="@id/mainToolbar">
+        android:background="@color/blackBlue"
+        app:layout_constraintTop_toBottomOf="@id/mainToolbar"
+        app:tabSelectedTextColor="@color/blueLight"
+        app:tabTextColor="@color/greyDark">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
