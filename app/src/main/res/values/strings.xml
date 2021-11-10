@@ -8,7 +8,9 @@
     <string name="title_home">Home</string>
     <string name="title_table">Tabela</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="col_table_date">Data</string>
+    <string name="col_table_kWh">Consumo</string>
+
 
     <string name="txt_daily">Ver por dia</string>
     <string name="txt_monthly">Ver por mês</string>

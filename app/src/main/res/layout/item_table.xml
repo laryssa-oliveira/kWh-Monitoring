@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".TableFragment"
-    android:background="@color/black">
+    android:layout_height="wrap_content"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardViewTable"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:backgroundTint="@color/black"
@@ -24,53 +21,38 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
+                android:id="@+id/dateFirebase"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:text="@string/col_table_date"
-                android:textColor="@color/grey"
+                android:textColor="@color/greyDark"
                 android:textSize="16sp"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="80dp"
-                android:layout_marginEnd="80dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="18dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:background="@color/grey"/>
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/grey"/>
 
             <TextView
-                android:id="@+id/kWh"
-                android:layout_width="wrap_content"
+                android:id="@+id/kWhFirebase"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:text="@string/col_table_kWh"
-                android:textColor="@color/grey"
+                android:textColor="@color/greyDark"
                 android:textSize="16sp"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="80dp"
+                android:layout_marginStart="8dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
-
         </LinearLayout>
 
+        
     </com.google.android.material.card.MaterialCardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/cardViewTable"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:listitem="@layout/item_table" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
