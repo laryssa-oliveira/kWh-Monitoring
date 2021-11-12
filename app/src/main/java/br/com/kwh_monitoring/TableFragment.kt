@@ -20,6 +20,7 @@ class TableFragment : Fragment() {
     private val adapter by lazy { TableAdapter() }
     private val database = Firebase.database
     private var databaseRef: DatabaseReference = database.reference.child("chartTable")
+    private val referenceDate: DatabaseReference = database.reference.child("date")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,24 +34,36 @@ class TableFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val list = ArrayList<HistoryConsumption>()
+        val listConsumption = ArrayList<HistoryConsumption>()
+        val listDate = ArrayList<DateHour>()
+        var kWh: Float?
 
         databaseRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                list.clear()
+                listConsumption.clear()
                 for (snapshot in dataSnapshot.children) {
                     val consumption: Consumption? = snapshot.getValue(Consumption::class.java)
-                    val kWh = consumption?.getkWh()
-                    val day = consumption?.getDay()
-                    list.add(HistoryConsumption(day.toString(), kWh.toString()))
-                    adapter.setItems(list)
+                    kWh = consumption?.getkWh()
+                    listConsumption.add(HistoryConsumption(kWh.toString()))
                 }
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
+            override fun onCancelled(databaseError: DatabaseError) { }
         })
+
+        referenceDate.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                listDate.clear()
+                for (snapshot in dataSnapshot.children) {
+                    val date: String? = snapshot.getValue(String::class.java)
+                    listDate.add(DateHour(date))
+                    adapter.setItems(listConsumption, listDate)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) { }
+        })
+
         binding.recyclerView.adapter = adapter
 
     }

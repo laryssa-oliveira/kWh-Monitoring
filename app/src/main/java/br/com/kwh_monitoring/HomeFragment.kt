@@ -2,9 +2,8 @@ package br.com.kwh_monitoring
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.PagerAdapter
 import br.com.kwh_monitoring.databinding.FragmentHomeBinding
 import com.google.android.material.tabs.TabLayout

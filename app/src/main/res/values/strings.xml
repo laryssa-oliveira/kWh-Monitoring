@@ -2,14 +2,14 @@
     <string name="app_name">kWh-Monitoring</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
-    <string name="text_main">Consumo: </string>
+    <string name="text_main">Consumo atual: </string>
     <string name="text_value">Valor: </string>
     <string name="text_control">Controle</string>
     <string name="title_home">Home</string>
     <string name="title_table">Tabela</string>
 
-    <string name="col_table_date">Data</string>
-    <string name="col_table_kWh">Consumo</string>
+    <string name="col_table_date">Data e Hora</string>
+    <string name="col_table_kWh">Consumo [kWh]</string>
 
 
     <string name="txt_daily">Ver por dia</string>
