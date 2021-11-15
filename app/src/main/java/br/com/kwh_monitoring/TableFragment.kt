@@ -20,7 +20,8 @@ class TableFragment : Fragment() {
     private val adapter by lazy { TableAdapter() }
     private val database = Firebase.database
     private var databaseRef: DatabaseReference = database.reference.child("chartTable")
-    private val referenceDate: DatabaseReference = database.reference.child("date")
+    private var powerRef: DatabaseReference = database.reference.child("ap_power")
+    private val referenceDate: DatabaseReference = database.reference.child("date_hour")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,18 +52,61 @@ class TableFragment : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) { }
         })
 
+        val listConsumptionKW = ArrayList<ConsumptionKW>()
+        powerRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                listConsumptionKW.clear()
+                for (snapshot in dataSnapshot.children) {
+                    val apPower: Float? = snapshot.getValue(Float::class.java)
+                    val power = apPower?.div(1000)
+                    listConsumptionKW.add(ConsumptionKW(power))
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
+
         referenceDate.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 listDate.clear()
                 for (snapshot in dataSnapshot.children) {
                     val date: String? = snapshot.getValue(String::class.java)
                     listDate.add(DateHour(date))
-                    adapter.setItems(listConsumption, listDate)
+                    adapter.setItems(listConsumptionKW, listDate)
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) { }
         })
+/*
+        var day: Int? = 0
+        var day2: Int? = 0
+        var hour: Int? = 0
+        var hour2: Int? = 0
+        var kWh: Float? = 0.0f
+        var sumKWh: Float? = 0.0f
+        var listConsumption: Consumption
+        val list = ArrayList<Entry>()
+        list.clear()
+
+        for (i in 0..listConsumptionKW.size){
+            listDateHour[i].dateHour?.let { day = listDateHour[i].dateHour?.formatDay(it) }
+            listDateHour[i+1].dateHour?.let { day2 = listDateHour[i].dateHour?.formatDay(it) }
+            listDateHour[i].dateHour?.let { hour = listDateHour[i].dateHour?.formatHour(it) }
+            listDateHour[i+1].dateHour?.let { hour2 = listDateHour[i].dateHour?.formatHour(it) }
+            if(day == day2){
+                if (hour == hour2) {
+                    kWh = (listConsumptionKW[i].kW?.plus(kWh!!))
+                } else{
+                    kWh = (listConsumptionKW[i].kW?.plus(kWh!!))
+                }
+                sumKWh = (kWh?.plus(sumKWh!!))
+            } else {
+                kWh = listConsumptionKW[i].kW
+            }
+        }
+
+ */
 
         binding.recyclerView.adapter = adapter
 

@@ -13,6 +13,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.utils.Utils
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -24,10 +25,12 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private val database = Firebase.database
-    private val referenceStatus = database.getReference("LED_STATUS")
-    private var databaseRef: DatabaseReference = database.reference.child("chartTable")
+    private val referenceStatus = database.getReference("control_status")
+    private var powerRef: DatabaseReference = database.reference.child("ap_power")
+    private val dateHourRef: DatabaseReference = database.reference.child("date_hour")
     var lineDataSet = LineDataSet(null, null)
     var iLineDataSets: ArrayList<ILineDataSet> = ArrayList()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,28 +49,81 @@ class MainFragment : Fragment() {
 
         binding.lineChart.setNoDataText("Carregando...")
 
-        val list = ArrayList<Entry>()
-
-        databaseRef.addValueEventListener(object : ValueEventListener {
+        val listConsumptionKW = ArrayList<ConsumptionKW>()
+        val listDate = ArrayList<DateHour>()
+        powerRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                list.clear()
+                listConsumptionKW.clear()
                 for (snapshot in dataSnapshot.children) {
-                    val consumption: Consumption? = snapshot.getValue(Consumption::class.java)
-                    val kWh = consumption?.getkWh()
-                    val day = consumption?.getDay()
-                    val dataPoint = DataPoint(day,kWh)
-                    list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
-                    showChart(list)
+                    val apPower: Float? = snapshot.getValue(Float::class.java)
+                    val power = apPower?.div(1000)
+                    listConsumptionKW.add(ConsumptionKW(power))
                 }
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {  }
+            override fun onCancelled(databaseError: DatabaseError) {}
         })
+
+        dateHourRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                listDate.clear()
+                for (snapshot in dataSnapshot.children) {
+                    val dateHour: String? = snapshot.getValue(String::class.java)
+                    listDate.add(DateHour(dateHour))
+                }
+                calculateKWH(listConsumptionKW, listDate)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
+
+
+    }
+
+    fun calculateKWH(listPower: ArrayList<ConsumptionKW>, listDay: ArrayList<DateHour>) {
+        val listDayInt = ArrayList<Int?>()
+        listDayInt.clear()
+        val list = ArrayList<Entry>()
+        list.clear()
+        var kWh: Float? = 0.0f
+        var day: Int?
+        var day2: Int? = 0
+        var dateHour: DateHour
+        for (i in 0..(listDay.size - 1)) {
+            dateHour = listDay[i]
+            day = dateHour.dateHour?.formatDay(dateHour.dateHour!!)
+            listDayInt.add(day)
+        }
+        for (i in 1..listDayInt.size) {
+            val day1 = listDayInt[i - 1]
+            if (i < listDayInt.size){
+                day2 = listDayInt[i]
+            }
+            if (day1 == day2) {
+                if (i == listDayInt.size-1){
+                    kWh = listPower[i - 1].kW?.plus(listPower[i].kW!!)
+                    val dataPoint = DataPoint(day1, kWh)
+                    list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
+                    showChart(list)
+                    kWh = 0.0f
+                }
+                kWh = listPower[i - 1].kW?.plus(kWh!!)
+            } else{
+                kWh = listPower[i - 1].kW?.plus(kWh!!)
+                val dataPoint = DataPoint(day1, kWh)
+                list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
+                showChart(list)
+                kWh = 0.0f
+            }
+
+        }
+
 
     }
 
     private fun showChart(dataVals: ArrayList<Entry>) {
         lineDataSet.values = dataVals
+        dataVals.size
         lineDataSet.label = "Consumo em kWh"
         iLineDataSets.clear()
         lineDataSet.color = Color.rgb(61, 224, 242)
