@@ -19,7 +19,6 @@ class TableFragment : Fragment() {
     private lateinit var binding: FragmentTableBinding
     private val adapter by lazy { TableAdapter() }
     private val database = Firebase.database
-    private var databaseRef: DatabaseReference = database.reference.child("chartTable")
     private var powerRef: DatabaseReference = database.reference.child("ap_power")
     private val referenceDate: DatabaseReference = database.reference.child("date_hour")
 
@@ -35,23 +34,6 @@ class TableFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val listConsumption = ArrayList<HistoryConsumption>()
-        val listDate = ArrayList<DateHour>()
-        var kWh: Float?
-
-        databaseRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                listConsumption.clear()
-                for (snapshot in dataSnapshot.children) {
-                    val consumption: Consumption? = snapshot.getValue(Consumption::class.java)
-                    kWh = consumption?.getkWh()
-                    listConsumption.add(HistoryConsumption(kWh.toString()))
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) { }
-        })
-
         val listConsumptionKW = ArrayList<ConsumptionKW>()
         powerRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -66,6 +48,7 @@ class TableFragment : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) {}
         })
 
+        val listDate = ArrayList<DateHour>()
         referenceDate.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 listDate.clear()
@@ -76,42 +59,10 @@ class TableFragment : Fragment() {
                 }
             }
 
-            override fun onCancelled(databaseError: DatabaseError) { }
+            override fun onCancelled(databaseError: DatabaseError) {}
         })
-/*
-        var day: Int? = 0
-        var day2: Int? = 0
-        var hour: Int? = 0
-        var hour2: Int? = 0
-        var kWh: Float? = 0.0f
-        var sumKWh: Float? = 0.0f
-        var listConsumption: Consumption
-        val list = ArrayList<Entry>()
-        list.clear()
-
-        for (i in 0..listConsumptionKW.size){
-            listDateHour[i].dateHour?.let { day = listDateHour[i].dateHour?.formatDay(it) }
-            listDateHour[i+1].dateHour?.let { day2 = listDateHour[i].dateHour?.formatDay(it) }
-            listDateHour[i].dateHour?.let { hour = listDateHour[i].dateHour?.formatHour(it) }
-            listDateHour[i+1].dateHour?.let { hour2 = listDateHour[i].dateHour?.formatHour(it) }
-            if(day == day2){
-                if (hour == hour2) {
-                    kWh = (listConsumptionKW[i].kW?.plus(kWh!!))
-                } else{
-                    kWh = (listConsumptionKW[i].kW?.plus(kWh!!))
-                }
-                sumKWh = (kWh?.plus(sumKWh!!))
-            } else {
-                kWh = listConsumptionKW[i].kW
-            }
-        }
-
- */
 
         binding.recyclerView.adapter = adapter
 
     }
-
-
-
 }

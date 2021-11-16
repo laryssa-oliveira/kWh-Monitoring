@@ -24,9 +24,21 @@ fun String.formatSchedule(format: String): String? {
 }
 
 fun String.formatHour(format: String): Int? {
-    val hour1: Int = format[11].toInt()
-    val hour2: Int = format[12].toInt()
-    return (hour1 * 10) + hour2
+    val hourFormat = format.split("T", ":")
+    val hourStr = hourFormat[1]
+    return hourStr.toInt()
+}
+
+fun String.formatMinute(format: String): Int? {
+    val minuteFormat = format.split("T", ":")
+    val minuteStr = minuteFormat[2]
+    return minuteStr.toInt()
+}
+
+fun String.formatSecond(format: String): Int? {
+    val secondFormat = format.split("T", ":", "Z")
+    val secondStr = secondFormat[3]
+    return secondStr.toInt()
 }
 
 fun String.formatDay(format: String): Int? {
