@@ -57,7 +57,7 @@ class MainFragment : Fragment() {
                 listConsumptionKW.clear()
                 for (snapshot in dataSnapshot.children) {
                     val apPower: Float? = snapshot.getValue(Float::class.java)
-                    val power = apPower?.div(6000)
+                    val power = apPower?.div(1000)
                     listConsumptionKW.add(ConsumptionKW(power))
                 }
             }
@@ -94,6 +94,8 @@ class MainFragment : Fragment() {
         listHourTotal.clear()
         val list = ArrayList<Entry>()
         list.clear()
+        val listTime = ArrayList<Entry>()
+        listTime.clear()
         var kWh: Float? = 0.0f
         var day: Int?
         var day2: Int? = 0
@@ -102,7 +104,7 @@ class MainFragment : Fragment() {
         var minute: Int?
         var second: Int?
         var totalHour: Int? = 0
-        val constError: Float? = 0.5f
+        val constError: Float? = 1.5f
         var totalKWH: Float? = 0.0f
 
 

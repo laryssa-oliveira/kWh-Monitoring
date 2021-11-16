@@ -52,3 +52,9 @@ fun String.formatPower(format: String): Float? {
     val powerStr = powerFormat[1]
     return powerStr.toFloat()
 }
+
+fun String.formatTime(format: String): String? {
+    val timeFormat = format.split("-","Z").toTypedArray()
+    val timeStr = timeFormat[1]
+    return timeFormat.toString()
+}
