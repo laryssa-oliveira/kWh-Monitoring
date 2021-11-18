@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 class TableAdapter : RecyclerView.Adapter<TableAdapter.TableViewHolder>() {
 
     private var consumption: List<ConsumptionKW> = emptyList()
-    private var date: List<DateHour> = emptyList()
+    private var date: List<DateTime> = emptyList()
 
     inner class TableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(historyConsumption: ConsumptionKW, date: DateHour) {
+        fun bind(consumptionKW: ConsumptionKW, dateTime: DateTime) {
             itemView.findViewById<TextView>(R.id.dateFirebase).text =
-                date.dateHour?.formatDateHour(date.dateHour)
+                dateTime.dateTime?.formatDateHour(dateTime.dateTime)
             itemView.findViewById<TextView>(R.id.kWhFirebase).text =
-                historyConsumption.kW.toString()
+                consumptionKW.kW.toString()
         }
     }
 
@@ -37,8 +37,8 @@ class TableAdapter : RecyclerView.Adapter<TableAdapter.TableViewHolder>() {
         return consumption.size
     }
 
-    fun setItems(listConsumption: List<ConsumptionKW>, listDateHour: List<DateHour>) {
+    fun setItems(listConsumption: List<ConsumptionKW>, listDateTime: List<DateTime>) {
         consumption = listConsumption
-        date = listDateHour
+        date = listDateTime
     }
 }

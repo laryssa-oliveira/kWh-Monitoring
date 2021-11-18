@@ -13,22 +13,20 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.github.mikephil.charting.utils.Utils
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.text.DecimalFormat
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private val database = Firebase.database
     private val referenceStatus = database.getReference("control_status")
-    private var powerRef: DatabaseReference = database.reference.child("ap_power")
-    private val dateHourRef: DatabaseReference = database.reference.child("date_hour")
+    private var powerRef: DatabaseReference = database.reference.child("power")
+    private val dateHourRef: DatabaseReference = database.reference.child("date_time")
     var lineDataSet = LineDataSet(null, null)
     var iLineDataSets: ArrayList<ILineDataSet> = ArrayList()
 
@@ -51,7 +49,7 @@ class MainFragment : Fragment() {
         binding.lineChart.setNoDataText("Carregando...")
 
         val listConsumptionKW = ArrayList<ConsumptionKW>()
-        val listDate = ArrayList<DateHour>()
+        val listDate = ArrayList<DateTime>()
         powerRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 listConsumptionKW.clear()
@@ -70,7 +68,7 @@ class MainFragment : Fragment() {
                 listDate.clear()
                 for (snapshot in dataSnapshot.children) {
                     val dateHour: String? = snapshot.getValue(String::class.java)
-                    listDate.add(DateHour(dateHour))
+                    listDate.add(DateTime(dateHour))
                 }
                 calculateKWH(listConsumptionKW, listDate)
             }
@@ -81,7 +79,7 @@ class MainFragment : Fragment() {
 
     }
 
-    fun calculateKWH(listPower: ArrayList<ConsumptionKW>, listDay: ArrayList<DateHour>) {
+    fun calculateKWH(listPower: ArrayList<ConsumptionKW>, listDay: ArrayList<DateTime>) {
         val listDayInt = ArrayList<Int?>()
         listDayInt.clear()
         val listHourInt = ArrayList<Int?>()
@@ -99,7 +97,7 @@ class MainFragment : Fragment() {
         var kWh: Float? = 0.0f
         var day: Int?
         var day2: Int? = 0
-        var dateHour: DateHour
+        var dateTime: DateTime
         var hour: Int?
         var minute: Int?
         var second: Int?
@@ -109,15 +107,16 @@ class MainFragment : Fragment() {
 
 
         for (i in 0..(listPower.size - 1)) {
-            dateHour = listDay[i]
-            day = dateHour.dateHour?.formatDay(dateHour.dateHour!!)
+            dateTime = listDay[i]
+            day = formatDay(dateTime.dateTime!!)
             listDayInt.add(day)
-            hour = dateHour.dateHour?.formatHour(dateHour.dateHour!!)
+            hour = formatHour(dateTime.dateTime!!)
             listHourInt.add(hour)
-            minute = dateHour.dateHour?.formatMinute(dateHour.dateHour!!)
+            minute = formatMinute(dateTime.dateTime!!)
             listMinuteInt.add(minute)
-            second = dateHour.dateHour?.formatSecond(dateHour.dateHour!!)
+            second = formatSecond(dateTime.dateTime!!)
             listSecondInt.add(second)
+
         }
 
         for (i in 1..listPower.size) {
@@ -154,9 +153,10 @@ class MainFragment : Fragment() {
 
         }
 
-        binding.consumption.text = totalKWH.toString()
-        val value = totalKWH?.times(0.6)
-        binding.value.text = "R$ " + value.toString()
+        val formatNumber = formatValue(totalKWH?.formatNum(3)!!)
+        binding.consumption.text = "$formatNumber kWh"
+        val value = formatValue(totalKWH?.times(0.6)?.toFloat()?.formatNum(2)!!)
+        binding.value.text = "R$ $value"
 
 
     }
@@ -198,7 +198,7 @@ class MainFragment : Fragment() {
         val yAxis = binding.lineChart.axisLeft
         val yAxisRight = binding.lineChart.axisRight
 
-        xAxis.setLabelCount(3, true)
+        xAxis.setLabelCount(2, true)
         xAxis.axisLineColor = Color.BLACK
         xAxis.textColor = Color.rgb(61, 224, 242)
         xAxis.gridColor = Color.BLACK

@@ -1,7 +1,7 @@
 package br.com.kwh_monitoring
 
-data class DateHour(
-    val dateHour: String? = ""
+data class DateTime(
+    val dateTime: String? = ""
 )
 
 data class ConsumptionKW (
