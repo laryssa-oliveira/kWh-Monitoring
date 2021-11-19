@@ -1,7 +1,7 @@
 package br.com.kwh_monitoring
 
 //yyyy-mm-dd to dd/mm/yyyy
-fun String.formatDateHour(format: String): String? {
+fun formatDateHour(format: String): String? {
     val year: String = format[0].toString() + format[1].toString() + format[2].toString() + format[3].toString()
     val month: String = format[5].toString() + format[6].toString()
     val day: String = format[8].toString() + format[9].toString()

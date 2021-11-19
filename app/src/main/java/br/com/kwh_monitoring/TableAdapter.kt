@@ -14,9 +14,9 @@ class TableAdapter : RecyclerView.Adapter<TableAdapter.TableViewHolder>() {
     inner class TableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(consumptionKW: ConsumptionKW, dateHour: DateHour) {
             itemView.findViewById<TextView>(R.id.dateFirebase).text =
-                dateHour.dateTime?.formatDateHour(dateHour.dateTime)
+                formatDateHour(dateHour.dateTime!!)
             itemView.findViewById<TextView>(R.id.kWhFirebase).text =
-                consumptionKW.kW.toString()
+                formatValue(consumptionKW.kW?.formatNum(3)!!)
         }
     }
 

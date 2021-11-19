@@ -81,11 +81,10 @@ class MainFragment : Fragment() {
     }
 
     fun calculateKWH(listPower: ArrayList<ConsumptionKW>, listDateHour: ArrayList<DateHour>) {
-
         val list = ArrayList<Entry>()
         list.clear()
         var dateTime1: DateTime
-        var dateTime2: DateTime
+        var dateTime2 = DateTime(listDateHour[0].dateTime)
         var totalH = 0
         var totalM = 0
         var totalS = 0
@@ -93,22 +92,42 @@ class MainFragment : Fragment() {
         var kWh: Float? = 0.0f
         var totalKwh: Float? = 0.0f
 
-        for (i in 0..listDateHour.size - 1) {
-            dateTime1 = DateTime(listDateHour[i].dateTime)
-            dateTime2 = DateTime(listDateHour[i + 1].dateTime)
+        for (i in 1..listPower.size) {
+            dateTime1 = DateTime(listDateHour[i - 1].dateTime)
+
+            if (i < listPower.size) {
+                dateTime2 = DateTime(listDateHour[i].dateTime)
+            }
 
             if (Days.daysBetween(dateTime1, dateTime2).days == 0) {
-                totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
-                totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
-                totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
-                totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
-                kWh = kWh?.plus(listPower[i].kW!!)
-            } else{
+
+                if (i == listPower.size - 1) {
+                    totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
+                    totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
+                    totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
+                    totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
+                    kWh = kWh?.plus(listPower[i - 1].kW!!)!!.plus(listPower[i].kW!!).times(totalTime.div(3600)!!)
+                    val dataPoint = DataPoint(dateTime1.dayOfMonth, kWh)
+                    list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
+                    showChart(list)
+                    totalKwh = totalKwh?.plus(kWh!!)
+                    kWh = 0.0f
+                    totalTime = 0.0f
+                } else{
+                    totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
+                    totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
+                    totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
+                    totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
+                    kWh = kWh?.plus(listPower[i - 1].kW!!)!!
+                }
+            } else {
+                kWh = kWh?.plus(listPower[i - 1].kW!!)!!.times(totalTime.div(3600)!!)
                 val dataPoint = DataPoint(dateTime1.dayOfMonth, kWh)
                 list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
                 showChart(list)
-                totalKwh = totalKwh?.plus(kWh!!.times(totalTime.div(3600)!!))
+                totalKwh = totalKwh?.plus(kWh!!)
                 kWh = 0.0f
+                totalTime = 0.0f
             }
 
         }
@@ -117,94 +136,6 @@ class MainFragment : Fragment() {
         binding.consumption.text = "$formatNumber kWh"
         val value = formatValue(totalKwh?.times(0.6)?.toFloat()?.formatNum(2)!!)
         binding.value.text = "R$ $value"
-
-/*
-10          10          10          11          11          12          13
-9:15:25     9:15:55     9:17:25
-dateTime1 = 10
-dateTime2 = 10
-
-
-        val listDayInt = ArrayList<Int?>()
-        listDayInt.clear()
-        val listHourInt = ArrayList<Int?>()
-        listHourInt.clear()
-        val listMinuteInt = ArrayList<Int?>()
-        listMinuteInt.clear()
-        val listSecondInt = ArrayList<Int?>()
-        listSecondInt.clear()
-        val listHourTotal = ArrayList<Int?>()
-        listHourTotal.clear()
-        val list = ArrayList<Entry>()
-        list.clear()
-        val listTime = ArrayList<Entry>()
-        listTime.clear()
-        var kWh: Float? = 0.0f
-        var day: Int?
-        var day2: Int? = 0
-        var dateHour: DateHour
-        var hour: Int?
-        var minute: Int?
-        var second: Int?
-        var totalHour: Int? = 0
-        val constError: Float? = 1.5f
-        var totalKWH: Float? = 0.0f
-
-
-        for (i in 0..(listPower.size - 1)) {
-            dateHour = listDay[i]
-            day = formatDay(dateHour.dateTime!!)
-            listDayInt.add(day)
-            hour = formatHour(dateHour.dateTime!!)
-            listHourInt.add(hour)
-            minute = formatMinute(dateHour.dateTime!!)
-            listMinuteInt.add(minute)
-            second = formatSecond(dateHour.dateTime!!)
-            listSecondInt.add(second)
-
-        }
-
-        for (i in 1..listPower.size) {
-            val day1 = listDayInt[i - 1]
-            if (i < listDayInt.size) {
-                day2 = listDayInt[i]
-            }
-            if (day1 == day2) {
-                if (i == listDayInt.size - 1) {
-                    totalHour = totalHour?.plus(listHourInt[i - 1]?.times(3600)!!)!!.plus(listMinuteInt[i - 1]!!.times(60)!!.plus(listSecondInt[i - 1]!!)).plus(listHourInt[i]?.times(3600)!!)!!.plus(listMinuteInt[i]!!.times(60)!!.plus(listSecondInt[i ]!!))
-                    val mod = totalHour.mod(3600)
-                    kWh = listPower[i - 1].kW?.plus(listPower[i].kW!!)
-                    kWh = kWh?.times(mod)?.div(3600)?.times(constError!!)
-                    totalKWH = totalKWH?.plus(kWh!!)
-                    val dataPoint = DataPoint(day1, kWh)
-                    list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
-                    showChart(list)
-                    kWh = 0.0f
-                }
-                totalHour = totalHour?.plus(listHourInt[i - 1]?.times(3600)!!)!!.plus(listMinuteInt[i - 1]!!.times(60)!!.plus(listSecondInt[i - 1]!!))
-                kWh = listPower[i - 1].kW?.plus(kWh!!)
-            } else {
-                totalHour = totalHour?.plus(listHourInt[i - 1]?.times(3600)!!)!!.plus(listMinuteInt[i - 1]!!.times(60)!!.plus(listSecondInt[i - 1]!!))
-                val mod = totalHour.mod(3600)
-                kWh = listPower[i - 1].kW?.plus(kWh!!)
-                kWh = kWh?.times(mod)?.div(3600)?.times(constError!!)
-                totalKWH = totalKWH?.plus(kWh!!)
-                val dataPoint = DataPoint(day1, kWh)
-                list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
-                showChart(list)
-                kWh = 0.0f
-                totalHour = 0
-            }
-
-        }
-
-        val formatNumber = formatValue(totalKWH?.formatNum(3)!!)
-        binding.consumption.text = "$formatNumber kWh"
-        val value = formatValue(totalKWH?.times(0.6)?.toFloat()?.formatNum(2)!!)
-        binding.value.text = "R$ $value"
-
- */
-
 
     }
 
@@ -245,7 +176,7 @@ dateTime2 = 10
         val yAxis = binding.lineChart.axisLeft
         val yAxisRight = binding.lineChart.axisRight
 
-        xAxis.setLabelCount(3, true)
+        xAxis.setLabelCount(1, true)
         xAxis.axisLineColor = Color.BLACK
         xAxis.textColor = Color.rgb(61, 224, 242)
         xAxis.gridColor = Color.BLACK
