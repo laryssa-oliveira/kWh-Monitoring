@@ -106,14 +106,15 @@ class MainFragment : Fragment() {
                     totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
                     totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
                     totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
-                    kWh = kWh?.plus(listPower[i - 1].kW!!)!!.plus(listPower[i].kW!!).times(totalTime.div(3600)!!)
+                    kWh = kWh?.plus(listPower[i - 1].kW!!)!!.plus(listPower[i].kW!!)
+                        .times(totalTime.div(3600)!!)
                     val dataPoint = DataPoint(dateTime1.dayOfMonth, kWh)
                     list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
                     showChart(list)
                     totalKwh = totalKwh?.plus(kWh!!)
                     kWh = 0.0f
                     totalTime = 0.0f
-                } else{
+                } else {
                     totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
                     totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
                     totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds

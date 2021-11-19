@@ -13,10 +13,10 @@
         android:layout_width="320dp"
         android:layout_height="336dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
@@ -31,8 +31,8 @@
         android:layout_height="72dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/blackBlue"
-        app:cardElevation="16dp"
         app:cardCornerRadius="16dp"
+        app:cardElevation="16dp"
         app:layout_constraintLeft_toLeftOf="@id/graph"
         app:layout_constraintRight_toRightOf="@id/graph"
         app:layout_constraintTop_toBottomOf="@id/graph">
@@ -75,7 +75,7 @@
             android:layout_marginTop="40dp"
             android:text="R$ 2,00"
             android:textColor="@color/greenWater"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -84,8 +84,8 @@
         android:layout_height="80dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/blackBlue"
-        app:cardElevation="16dp"
         app:cardCornerRadius="16dp"
+        app:cardElevation="16dp"
         app:layout_constraintLeft_toLeftOf="@id/cardViewValues"
         app:layout_constraintRight_toRightOf="@id/cardViewValues"
         app:layout_constraintTop_toBottomOf="@id/cardViewValues">
@@ -94,8 +94,8 @@
             android:id="@+id/on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="48dp"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/blueLight"
             android:text="@string/on"
             android:textColor="@color/white"
@@ -106,17 +106,15 @@
             android:id="@+id/off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="176dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/redMedium"
             android:text="@string/off"
             android:textColor="@color/white"
-            android:backgroundTint="@color/redMedium"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="176dp"
-            app:layout_constraintTop_toBottomOf="@id/cardViewControl"
-            app:layout_constraintRight_toRightOf="@id/cardViewControl"/>
+            app:layout_constraintRight_toRightOf="@id/cardViewControl"
+            app:layout_constraintTop_toBottomOf="@id/cardViewControl" />
 
     </androidx.cardview.widget.CardView>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
