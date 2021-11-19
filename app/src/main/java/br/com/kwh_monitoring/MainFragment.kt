@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import org.joda.time.*
 
 class MainFragment : Fragment() {
 
@@ -49,7 +50,7 @@ class MainFragment : Fragment() {
         binding.lineChart.setNoDataText("Carregando...")
 
         val listConsumptionKW = ArrayList<ConsumptionKW>()
-        val listDate = ArrayList<DateTime>()
+        val listDate = ArrayList<DateHour>()
         powerRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 listConsumptionKW.clear()
@@ -68,7 +69,7 @@ class MainFragment : Fragment() {
                 listDate.clear()
                 for (snapshot in dataSnapshot.children) {
                     val dateHour: String? = snapshot.getValue(String::class.java)
-                    listDate.add(DateTime(dateHour))
+                    listDate.add(DateHour(dateHour))
                 }
                 calculateKWH(listConsumptionKW, listDate)
             }
@@ -79,7 +80,51 @@ class MainFragment : Fragment() {
 
     }
 
-    fun calculateKWH(listPower: ArrayList<ConsumptionKW>, listDay: ArrayList<DateTime>) {
+    fun calculateKWH(listPower: ArrayList<ConsumptionKW>, listDateHour: ArrayList<DateHour>) {
+
+        val list = ArrayList<Entry>()
+        list.clear()
+        var dateTime1: DateTime
+        var dateTime2: DateTime
+        var totalH = 0
+        var totalM = 0
+        var totalS = 0
+        var totalTime = 0.0f
+        var kWh: Float? = 0.0f
+        var totalKwh: Float? = 0.0f
+
+        for (i in 0..listDateHour.size - 1) {
+            dateTime1 = DateTime(listDateHour[i].dateTime)
+            dateTime2 = DateTime(listDateHour[i + 1].dateTime)
+
+            if (Days.daysBetween(dateTime1, dateTime2).days == 0) {
+                totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
+                totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
+                totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
+                totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
+                kWh = kWh?.plus(listPower[i].kW!!)
+            } else{
+                val dataPoint = DataPoint(dateTime1.dayOfMonth, kWh)
+                list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
+                showChart(list)
+                totalKwh = totalKwh?.plus(kWh!!.times(totalTime.div(3600)!!))
+                kWh = 0.0f
+            }
+
+        }
+
+        val formatNumber = formatValue(totalKwh?.formatNum(3)!!)
+        binding.consumption.text = "$formatNumber kWh"
+        val value = formatValue(totalKwh?.times(0.6)?.toFloat()?.formatNum(2)!!)
+        binding.value.text = "R$ $value"
+
+/*
+10          10          10          11          11          12          13
+9:15:25     9:15:55     9:17:25
+dateTime1 = 10
+dateTime2 = 10
+
+
         val listDayInt = ArrayList<Int?>()
         listDayInt.clear()
         val listHourInt = ArrayList<Int?>()
@@ -97,7 +142,7 @@ class MainFragment : Fragment() {
         var kWh: Float? = 0.0f
         var day: Int?
         var day2: Int? = 0
-        var dateTime: DateTime
+        var dateHour: DateHour
         var hour: Int?
         var minute: Int?
         var second: Int?
@@ -107,14 +152,14 @@ class MainFragment : Fragment() {
 
 
         for (i in 0..(listPower.size - 1)) {
-            dateTime = listDay[i]
-            day = formatDay(dateTime.dateTime!!)
+            dateHour = listDay[i]
+            day = formatDay(dateHour.dateTime!!)
             listDayInt.add(day)
-            hour = formatHour(dateTime.dateTime!!)
+            hour = formatHour(dateHour.dateTime!!)
             listHourInt.add(hour)
-            minute = formatMinute(dateTime.dateTime!!)
+            minute = formatMinute(dateHour.dateTime!!)
             listMinuteInt.add(minute)
-            second = formatSecond(dateTime.dateTime!!)
+            second = formatSecond(dateHour.dateTime!!)
             listSecondInt.add(second)
 
         }
@@ -158,6 +203,8 @@ class MainFragment : Fragment() {
         val value = formatValue(totalKWH?.times(0.6)?.toFloat()?.formatNum(2)!!)
         binding.value.text = "R$ $value"
 
+ */
+
 
     }
 
@@ -198,7 +245,7 @@ class MainFragment : Fragment() {
         val yAxis = binding.lineChart.axisLeft
         val yAxisRight = binding.lineChart.axisRight
 
-        xAxis.setLabelCount(2, true)
+        xAxis.setLabelCount(3, true)
         xAxis.axisLineColor = Color.BLACK
         xAxis.textColor = Color.rgb(61, 224, 242)
         xAxis.gridColor = Color.BLACK

@@ -47,13 +47,13 @@ class TableFragment : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) {}
         })
 
-        val listDate = ArrayList<DateTime>()
+        val listDate = ArrayList<DateHour>()
         referenceDate.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 listDate.clear()
                 for (snapshot in dataSnapshot.children) {
                     val date: String? = snapshot.getValue(String::class.java)
-                    listDate.add(DateTime(date))
+                    listDate.add(DateHour(date))
                     adapter.setItems(listConsumptionKW, listDate)
                 }
             }

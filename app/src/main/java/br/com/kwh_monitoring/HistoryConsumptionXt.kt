@@ -1,6 +1,6 @@
 package br.com.kwh_monitoring
 
-data class DateTime(
+data class DateHour(
     val dateTime: String? = ""
 )
 
