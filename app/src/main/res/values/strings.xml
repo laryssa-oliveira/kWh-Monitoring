@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">kWh-Monitoring</string>
+    <string name="app_name">kWh Monitoring</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
-    <string name="text_main">Consumo atual: </string>
+    <string name="text_main">Consumo total: </string>
     <string name="text_value">Valor: </string>
     <string name="text_control">Controle</string>
     <string name="title_home">Home</string>
@@ -11,15 +11,4 @@
     <string name="col_table_date">Data e Hora</string>
     <string name="col_table_kWh">Consumo [kW]</string>
 
-
-    <string name="txt_daily">Ver por dia</string>
-    <string name="txt_monthly">Ver por mês</string>
-    <string name="txt_quarterly">Ver por trimestre</string>
-
-    <string name="text_chart_desc_daily">Gráfico do dia</string>
-    <string name="text_chart_desc_monthly">Gráfico do mês</string>
-    <string name="text_chart_desc_quarterly">Gráfico do trimestre</string>
-    <string name="text_chart_no_data_desc">Não há dados ainda</string>
-
-    <string name="error_load_data">Opa, ocorreu um erro ao carregar os dados!</string>
 </resources>

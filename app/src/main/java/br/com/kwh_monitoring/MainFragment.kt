@@ -20,6 +20,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import org.joda.time.*
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class MainFragment : Fragment() {
 
@@ -56,7 +59,7 @@ class MainFragment : Fragment() {
                 listConsumptionKW.clear()
                 for (snapshot in dataSnapshot.children) {
                     val apPower: Float? = snapshot.getValue(Float::class.java)
-                    val power = apPower?.div(1000)
+                    val power = apPower?.div(12000)
                     listConsumptionKW.add(ConsumptionKW(power))
                 }
             }
@@ -90,7 +93,7 @@ class MainFragment : Fragment() {
         var totalS = 0
         var totalTime = 0.0f
         var kWh: Float? = 0.0f
-        var totalKwh: Float? = 0.0f
+        var totalKwh: Double? = 0.0
 
         for (i in 1..listPower.size) {
             dateTime1 = DateTime(listDateHour[i - 1].dateTime)
@@ -133,10 +136,13 @@ class MainFragment : Fragment() {
 
         }
 
-        val formatNumber = formatValue(totalKwh?.formatNum(3)!!)
-        binding.consumption.text = "$formatNumber kWh"
-        val value = formatValue(totalKwh?.times(0.6)?.toFloat()?.formatNum(2)!!)
-        binding.value.text = "R$ $value"
+        val decimalFormat3 = DecimalFormat("#.###")
+        val formatStr = decimalFormat3.format(totalKwh).replaceAfter(".", ",")
+        binding.consumption.text = formatStr.plus(" kWh")
+        val valueRs = totalKwh?.times(0.6)
+        val decimalFormat2 = DecimalFormat("#.##")
+        val valueStr = "R$ ".plus(decimalFormat2.format(valueRs).replaceAfter(".",","))
+        binding.value.text = valueStr
 
     }
 

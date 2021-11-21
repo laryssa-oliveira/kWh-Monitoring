@@ -41,10 +41,10 @@
             android:id="@+id/textConsumption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="72dp"
+            android:layout_marginStart="64dp"
             android:layout_marginTop="16dp"
             android:text="@string/text_main"
-            android:textColor="@color/grey"
+            android:textColor="@color/greyDark"
             android:textSize="16sp" />
 
         <TextView
@@ -54,16 +54,16 @@
             android:layout_marginLeft="109dp"
             android:layout_marginTop="40dp"
             android:text="@string/text_value"
-            android:textColor="@color/grey"
+            android:textColor="@color/greyDark"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/consumption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="186dp"
+            android:layout_marginStart="176dp"
             android:layout_marginTop="16dp"
-            android:text="50kWh"
+            android:text="0,00kWh"
             android:textColor="@color/greenWater"
             android:textSize="16sp" />
 
@@ -71,9 +71,9 @@
             android:id="@+id/value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="152dp"
+            android:layout_marginStart="152dp"
             android:layout_marginTop="40dp"
-            android:text="R$ 2,00"
+            android:text="R$ 0,00"
             android:textColor="@color/greenWater"
             android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
@@ -98,7 +98,7 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/blueLight"
             android:text="@string/on"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="@id/cardViewControl"
             app:layout_constraintTop_toBottomOf="@id/cardViewControl" />
 
@@ -110,7 +110,7 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/redMedium"
             android:text="@string/off"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:layout_constraintRight_toRightOf="@id/cardViewControl"
             app:layout_constraintTop_toBottomOf="@id/cardViewControl" />
 
