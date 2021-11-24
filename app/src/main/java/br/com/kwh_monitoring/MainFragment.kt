@@ -1,5 +1,6 @@
 package br.com.kwh_monitoring
 
+
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,9 +21,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import org.joda.time.*
-import java.math.BigDecimal
-import java.math.RoundingMode
+import org.joda.time.tz.UTCProvider
 import java.text.DecimalFormat
+
 
 class MainFragment : Fragment() {
 
@@ -87,7 +88,7 @@ class MainFragment : Fragment() {
         val list = ArrayList<Entry>()
         list.clear()
         var dateTime1: DateTime
-        var dateTime2 = DateTime(listDateHour[0].dateTime)
+        var dateTime2 = DateTime(listDateHour[0].dateTime, DateTimeZone.UTC)
         var totalH = 0
         var totalM = 0
         var totalS = 0
@@ -96,44 +97,62 @@ class MainFragment : Fragment() {
         var totalKwh: Double? = 0.0
 
         for (i in 1..listPower.size) {
-            dateTime1 = DateTime(listDateHour[i - 1].dateTime)
+            dateTime1 = DateTime(listDateHour[i - 1].dateTime, DateTimeZone.UTC)
 
             if (i < listPower.size) {
-                dateTime2 = DateTime(listDateHour[i].dateTime)
+                dateTime2 = DateTime(listDateHour[i].dateTime, DateTimeZone.UTC)
             }
 
-            if (Days.daysBetween(dateTime1, dateTime2).days == 0) {
+            if (dateTime1.dayOfMonth == dateTime2.dayOfMonth) {
 
                 if (i == listPower.size - 1) {
-                    totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
-                    totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
-                    totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
-                    totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
-                    kWh = kWh?.plus(listPower[i - 1].kW!!)!!.plus(listPower[i].kW!!)
-                        .times(totalTime.div(3600)!!)
-                    val dataPoint = DataPoint(dateTime1.dayOfMonth, kWh)
-                    list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
-                    showChart(list)
-                    totalKwh = totalKwh?.plus(kWh!!)
-                    kWh = 0.0f
-                    totalTime = 0.0f
+                    if (listPower[i].kW == 0.0f) {
+                        totalTime += 0
+                        kWh = kWh?.plus(listPower[i - 1].kW!!)!!.times(totalTime.div(3600))
+                        val dataPoint = DataPoint(dateTime1.dayOfMonth, kWh)
+                        list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
+                        showChart(list)
+                        totalKwh = totalKwh?.plus(kWh)
+                        kWh = 0.0f
+                        totalTime = 0.0f
+                    } else {
+                        totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
+                        totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
+                        totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
+                        totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
+                        kWh = kWh?.plus(listPower[i - 1].kW!!)!!.plus(listPower[i].kW!!)
+                            .times(totalTime.div(3600))
+                        val dataPoint = DataPoint(dateTime1.dayOfMonth, kWh)
+                        list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
+                        showChart(list)
+                        totalKwh = totalKwh?.plus(kWh)
+                        kWh = 0.0f
+                        totalTime = 0.0f
+                    }
+
+
                 } else {
-                    totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
-                    totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
-                    totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
-                    totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
-                    kWh = kWh?.plus(listPower[i - 1].kW!!)!!
+                    if (listPower[i - 1].kW == 0.0f) {
+                        totalTime += 0
+                    } else {
+                        totalH = Hours.hoursBetween(dateTime1, dateTime2).hours
+                        totalM = Minutes.minutesBetween(dateTime1, dateTime2).minutes
+                        totalS = Seconds.secondsBetween(dateTime1, dateTime2).seconds
+                        totalTime += totalH.div(24).plus(totalM.div(60)).plus(totalS)
+                        kWh = kWh?.plus(listPower[i - 1].kW!!)!!
+                    }
+
                 }
+
             } else {
-                kWh = kWh?.plus(listPower[i - 1].kW!!)!!.times(totalTime.div(3600)!!)
+                kWh = kWh?.plus(listPower[i - 1].kW!!)!!.times(totalTime.div(3600))
                 val dataPoint = DataPoint(dateTime1.dayOfMonth, kWh)
                 list.add(Entry(dataPoint.getxValue().toFloat(), dataPoint.getyValue()))
                 showChart(list)
-                totalKwh = totalKwh?.plus(kWh!!)
+                totalKwh = totalKwh?.plus(kWh)
                 kWh = 0.0f
                 totalTime = 0.0f
             }
-
         }
 
         val decimalFormat3 = DecimalFormat("#.###")
@@ -141,7 +160,7 @@ class MainFragment : Fragment() {
         binding.consumption.text = formatStr.plus(" kWh")
         val valueRs = totalKwh?.times(0.6)
         val decimalFormat2 = DecimalFormat("#.##")
-        val valueStr = "R$ ".plus(decimalFormat2.format(valueRs).replaceAfter(".",","))
+        val valueStr = "R$ ".plus(decimalFormat2.format(valueRs).replaceAfter(".", ","))
         binding.value.text = valueStr
 
     }

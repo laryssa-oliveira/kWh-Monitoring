@@ -17,7 +17,6 @@ class TableAdapter : RecyclerView.Adapter<TableAdapter.TableViewHolder>() {
             itemView.findViewById<TextView>(R.id.dateFirebase).text =
                 formatDateHour(dateHour.dateTime!!)
 
-                //formatValue(consumptionKW.kW?.formatNum(3)!!)
             val decimalFormat3 = DecimalFormat("#.###")
             val formatStr = decimalFormat3.format(consumptionKW.kW).replaceAfter(".", ",")
             itemView.findViewById<TextView>(R.id.kWhFirebase).text = formatStr
