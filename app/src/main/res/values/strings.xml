@@ -9,6 +9,6 @@
     <string name="title_table">Tabela</string>
 
     <string name="col_table_date">Data e Hora</string>
-    <string name="col_table_kWh">Consumo [kW]</string>
+    <string name="col_table_kWh">Potência [kW]</string>
 
 </resources>
